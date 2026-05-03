@@ -1,0 +1,9 @@
+{
+  "width": 800,
+  "height": 600,
+  "cols": 100,
+  "rows": 100,
+  "animals": [
+    { "amount": 4, "spec": { "type": "sheep", "data": {} } }
+  ]
+}
