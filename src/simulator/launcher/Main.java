@@ -214,7 +214,7 @@ public class Main {
 	
 	private static void parseModeOption(CommandLine line) throws ParseException {
 		String m =  line.getOptionValue("m");
-		if (m.equalsIgnoreCase(ExecMode.BATCH.getTag())) {
+		if (m != null && m.equalsIgnoreCase(ExecMode.BATCH.getTag())) {
 			mode = ExecMode.BATCH;
 		}else
 			mode = ExecMode.GUI;

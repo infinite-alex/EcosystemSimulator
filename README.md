@@ -4,6 +4,24 @@ A Java desktop application that simulates a **predator–prey ecosystem**: sheep
 
 ![Java](https://img.shields.io/badge/Java-Swing-orange) ![JSON](https://img.shields.io/badge/config-JSON-lightgrey)
 
+![Simulation running: sheep (green) and wolves (blue)](docs/simulation.gif)
+
+## Try it in 1 minute
+
+1. Install Java 17 or newer (if `java -version` doesn't work, get it from [adoptium.net](https://adoptium.net)).
+2. Download this repository: **Code → Download ZIP**, then unzip it.
+3. In the unzipped folder, double-click **`EcosystemSimulator.jar`**, or run:
+
+```bash
+java -jar EcosystemSimulator.jar -i resources/examples/ex4.json
+```
+
+Press the map button to watch the animals, then ▶ to run. Other worlds are in `resources/examples/`.
+
+| Control panel and statistics | Live map |
+|---|---|
+| ![GUI](docs/gui.png) | ![Map](docs/simulation.gif) |
+
 ## Features
 
 - **Graphical interface (Swing)** – control panel to load a configuration, start / stop the simulation, change the time step, open the map viewer and edit regions at runtime.
@@ -38,15 +56,13 @@ src/simulator/
 
 **Eclipse** (the repository is an Eclipse project): *File → Import → Existing Projects into Workspace*, then run `simulator.launcher.Main`.
 
-Requires **JDK 25** (the code uses statements before `super(...)` in constructors, a recent Java feature).
-
-**Command line** (from the repository root):
+**Build from source** (JDK 17+, from the repository root):
 
 ```bash
 # compile (on Windows use ; instead of : in the classpath)
 javac -d bin -cp "lib/*" $(find src/simulator -name "*.java")
 
-# GUI mode with an example world
+# GUI mode with an example world (or simply: java -jar EcosystemSimulator.jar)
 java -cp "bin:lib/*" simulator.launcher.Main -i resources/examples/ex1.json
 
 # batch mode: simulate 10 seconds and save the result

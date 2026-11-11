@@ -15,8 +15,8 @@ public class WolfBuilder extends Builder<Animal> {
     private Factory<SelectionStrategy> strategyFactory;
 
     public WolfBuilder(Factory<SelectionStrategy> strategyFactory) {
-        this.strategyFactory = strategyFactory;
         super("wolf", "Creates a wolf");
+        this.strategyFactory = strategyFactory;
     }
     
     @Override
