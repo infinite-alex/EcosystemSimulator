@@ -1,20 +1,70 @@
-# EcosystemSimulator
+# Ecosystem Simulator
 
+A Java desktop application that simulates a **predator–prey ecosystem**: sheep move around a map, eat, reproduce and try to escape, while wolves hunt them to survive. The population curves change in real time, so you can watch the ecosystem stabilise, explode or go extinct.
 
-The Ecosystem Simulator is a desktop application developed in Java using the Eclipse IDE and a graphical user interface (GUI). The project simulates a simple ecosystem where sheep and wolves interact within a virtual environment.
+![Java](https://img.shields.io/badge/Java-Swing-orange) ![JSON](https://img.shields.io/badge/config-JSON-lightgrey)
 
-In the simulation, sheep move around the map and reproduce over time, causing their population to grow. Wolves act as predators and hunt sheep to obtain food and survive. If wolves cannot find enough sheep to eat, they eventually die. As the numbers of sheep and wolves change, the ecosystem evolves dynamically, creating different population patterns and outcomes.
+## Features
 
-The simulator allows users to observe how predator-prey relationships affect the balance of an ecosystem. Depending on the conditions, populations may stabilize, increase rapidly, decrease, or even become extinct.
+- **Graphical interface (Swing)** – control panel to load a configuration, start / stop the simulation, change the time step, open the map viewer and edit regions at runtime.
+- **Live map viewer** – animals drawn on the map as they move, hunt and reproduce.
+- **Statistics tables** – population per species and per state, and food per region, updated every step.
+- **Configurable worlds** – map size, grid, animals and regions are described in JSON files (`resources/examples/`).
+- **Batch mode** – run a simulation from the command line and write the final state to a JSON file.
 
-### Features
+## How it is built
 
-* Graphical user interface developed in Java.
-* Sheep and wolf entities with individual behaviors.
-* Predator-prey interactions.
-* Population growth through reproduction.
-* Dynamic ecosystem simulation.
-* Real-time visualization of animal movements and population changes.
-* Educational demonstration of ecosystem balance and natural selection.
+The code follows a **Model–View–Controller** design and uses several classic design patterns:
 
-The main objective of the project is to illustrate the complex interactions between predators and prey while providing an interactive and visual learning experience.
+| Pattern | Where |
+|---|---|
+| **Observer** | the GUI (`simulator.view`) subscribes to the simulator through `EcoSysObserver` and redraws on every change |
+| **Factory + Builder** | `simulator.factories` creates animals, regions and strategies from JSON (`SheepBuilder`, `WolfBuilder`, `DynamicSupplyRegionBuilder`, ...) |
+| **Strategy** | how an animal chooses a mate or prey: `SelectFirst`, `SelectClosest`, `SelectYoungest` |
+| **Abstract classes / polymorphism** | `Animal` → `Sheep`, `Wolf`; `Region` → `DefaultRegion`, `DynamicSupplyRegion` |
+
+```text
+src/simulator/
+├── launcher/     Main – command-line options, GUI or batch mode
+├── control/      Controller – connects the model and the views
+├── model/        Simulator, animals, regions, region manager
+├── factories/    JSON → objects (Factory / Builder)
+├── strategies/   selection strategies
+├── view/         Swing GUI: main window, control panel, map, tables, dialogs
+└── misc/         utilities (vectors, helpers)
+```
+
+## Run it
+
+**Eclipse** (the repository is an Eclipse project): *File → Import → Existing Projects into Workspace*, then run `simulator.launcher.Main`.
+
+Requires **JDK 25** (the code uses statements before `super(...)` in constructors, a recent Java feature).
+
+**Command line** (from the repository root):
+
+```bash
+# compile (on Windows use ; instead of : in the classpath)
+javac -d bin -cp "lib/*" $(find src/simulator -name "*.java")
+
+# GUI mode with an example world
+java -cp "bin:lib/*" simulator.launcher.Main -i resources/examples/ex1.json
+
+# batch mode: simulate 10 seconds and save the result
+java -cp "bin:lib/*" simulator.launcher.Main -m batch -i resources/examples/ex1.json -o out.json -t 10
+```
+
+| Option | Meaning |
+|---|---|
+| `-m gui` / `-m batch` | execution mode (default: GUI) |
+| `-i <file>` | JSON configuration file (required in batch mode) |
+| `-o <file>` | output file for batch mode |
+| `-t <seconds>` | total simulation time |
+| `-dt <seconds>` | time step |
+| `-sv` | open the simple map viewer in batch mode |
+| `-h` | help |
+
+Libraries in `lib/`: Apache Commons CLI, `org.json` and a simple map viewer.
+
+## Author
+
+**Alexandra Rădulescu** – [GitHub](https://github.com/infinite-alex) · [LinkedIn](https://www.linkedin.com/in/alexandra-r%C4%83dulescu/)
